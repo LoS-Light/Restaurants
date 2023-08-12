@@ -4,7 +4,7 @@ import seedDataRests from '../seeds-data/restaurant.json';
 import Category from '../../entities/category.entity';
 import Restaurant from '../../entities/restaurant.entity';
 import RestaurantProfile from '../../entities/restaurant-profile.entity';
-import { IRestaurant } from '../../interfaces/IRestaurant';
+import { IRestaurant } from '../../interfaces/restaurant.interface';
 
 export default class Restaurants1691533956420 implements Seeder {
     track = false;

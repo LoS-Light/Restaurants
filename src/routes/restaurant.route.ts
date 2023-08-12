@@ -1,6 +1,6 @@
 import express from 'express';
 import RestaurantService from '../services/restaurant.service';
-import { IRestaurant } from '../interfaces/IRestaurant';
+import { IRestaurant } from '../interfaces/restaurant.interface';
 import asyncCatch from '../middlewares/asyncCatch.middleware';
 import { check } from 'express-validator';
 

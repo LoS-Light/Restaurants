@@ -3,7 +3,7 @@ import { DbMysql } from "../database/data-source.mysql";
 import Restaurant from "../entities/restaurant.entity";
 import Category from "../entities/category.entity";
 import { Like } from "typeorm";
-import { IRestaurant } from "../interfaces/IRestaurant";
+import { IRestaurant } from "../interfaces/restaurant.interface";
 import RestaurantProfile from "../entities/restaurant-profile.entity";
 
 export default class RestaurantService {
