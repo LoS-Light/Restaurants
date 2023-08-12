@@ -44,8 +44,8 @@ npm install
 
 4. Launch Mysql Server
 
-Launch your mysql server, and edit environment config files in folder "env".
-There are two config files in it, ".env.development.local" and ".env.production.local".
+Launch your mysql server, and edit environment config files in folder "env".<br />
+There are two config files in it, ".env.development.local" and ".env.production.local".<br />
 Change the "DB_MYSQL_USERNAME" and "DB_MYSQL_PASSWORD" to match your mysql server connection settings.
 
 <br />
