@@ -24,11 +24,15 @@
 git clone https://github.com/LoS-Light/Restaurants.git
 ```
 
+<br />
+
 2. Move to the Restaurants directory
 
 ```
 cd Restaurants
 ```
+
+<br />
 
 3. Restore the dependencies
 
@@ -36,21 +40,29 @@ cd Restaurants
 npm install
 ```
 
+<br />
+
 4. Launch Mysql Server
 
 Launch your mysql server, and edit environment config files in folder "env".
 There are two config files in it, ".env.development.local" and ".env.production.local".
 Change the "DB_MYSQL_USERNAME" and "DB_MYSQL_PASSWORD" to match your mysql server connection settings.
 
+<br />
+
 5. Create a new database and seed test data.
+
 ```
 npm run db:create
 npm run seed
 ```
 
+<br />
+
 6. Launch the application
 
 Run app in development mode
+
 ```
 npm run dev
 ```
@@ -58,6 +70,7 @@ npm run dev
 or
 
 Run app in production mode
+
 ```
 npm run build
 npm run start
@@ -71,8 +84,8 @@ https://rests.loslight.com
 
 ## Screenshots
 
-![image](https://github.com/LoS-Light/ShortUrl/blob/main/screenshots/restaurants-01.jpg)
-![image](https://github.com/LoS-Light/ShortUrl/blob/main/screenshots/restaurants-02.jpg)
+![image](https://github.com/LoS-Light/Restaurants/blob/main/screenshots/restaurants-01.jpg)
+![image](https://github.com/LoS-Light/Restaurants/blob/main/screenshots/restaurants-02.jpg)
 
 ## License
 
