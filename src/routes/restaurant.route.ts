@@ -3,22 +3,26 @@ import RestaurantService from '../services/restaurant.service';
 import { IRestaurant } from '../interfaces/restaurant.interface';
 import asyncCatch from '../middlewares/asyncCatch.middleware';
 import { check } from 'express-validator';
+import { FLASH_ACTION_ERROR, FLASH_ACTION_INFO, FLASH_TEXT_CREATE_REST, FLASH_TEXT_DELETE_REST, FLASH_TEXT_EDIT_REST } from '../defs/flash.def';
 
 export const RestaurantRoute = express.Router();
 const restService = new RestaurantService();
 
 // Validation
-const validCheck = check('**').trim().blacklist('<>&;=()\"\'');
+const validCheck = check('**').trim().blacklist('<>&=()\"\'');
 
 // View
 RestaurantRoute.get(['/', '/index', '/index.html'], (req, res) => res.redirect('/restaurants'));
 
 RestaurantRoute.get('/restaurants', validCheck, asyncCatch(async (req, res) => {
+    const flashInfo = req.flash(FLASH_ACTION_INFO);
+    const errorInfo = req.flash(FLASH_ACTION_ERROR);
+
     const keyword = req.query.keyword as string;
     const rests = await (keyword ?
         restService.getRestsByKeyword(keyword) : restService.getRestaurants());
 
-    res.render('index', { rests });
+    res.render('index', { flashInfo, errorInfo, rests });
 }));
 
 RestaurantRoute.get('/restaurants/new', validCheck, asyncCatch(async (req, res) => {
@@ -52,6 +56,10 @@ RestaurantRoute.get('/restaurants/:id/edit', validCheck, asyncCatch(async (req, 
     res.redirect('/index');
 }));
 
+RestaurantRoute.get('/error', validCheck, asyncCatch(async (req, res) => {
+    throw new Error("-> Test error");
+}));
+
 // ----------------------------------------------------------------------
 
 // Api
@@ -59,6 +67,8 @@ RestaurantRoute.post('/restaurants/new', validCheck, asyncCatch(async (req, res)
     const data = {} as IRestaurant;
     mapRestDataFromBody(data, req.body);
     await restService.createRestaurant(data);
+
+    req.flash(FLASH_ACTION_INFO, FLASH_TEXT_CREATE_REST);
     res.redirect('/index');
 }));
 
@@ -66,12 +76,16 @@ RestaurantRoute.put('/restaurants/:id', validCheck, asyncCatch(async (req, res) 
     const data = { id: Number(req.params.id) } as IRestaurant;
     mapRestDataFromBody(data, req.body);
     await restService.updateRestaurant(data);
+
+    req.flash(FLASH_ACTION_INFO, FLASH_TEXT_EDIT_REST);
     res.redirect('/index');
 }));
 
 RestaurantRoute.delete('/restaurants/:id', validCheck, asyncCatch(async (req, res) => {
     const id = Number(req.params.id);
     await restService.deleteRestaurant(id);
+
+    req.flash(FLASH_ACTION_INFO, FLASH_TEXT_DELETE_REST);
     res.redirect('/index');
 }));
 
