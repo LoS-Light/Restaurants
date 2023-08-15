@@ -2,8 +2,8 @@
 import { DbMysql } from "../database/data-source.mysql";
 import Restaurant from "../entities/restaurant.entity";
 import Category from "../entities/category.entity";
-import { Like } from "typeorm";
-import { IRestaurant } from "../interfaces/restaurant.interface";
+import { FindManyOptions, FindOptionsOrder, FindOptionsRelations, FindOptionsWhere, Like } from "typeorm";
+import { IRestaurant, IRestaurantSearchOptions } from "../interfaces/restaurant.interface";
 import RestaurantProfile from "../entities/restaurant-profile.entity";
 
 export default class RestaurantService {
@@ -12,29 +12,37 @@ export default class RestaurantService {
     private repoRest = DbMysql.getRepository(Restaurant);
     private repoProfile = DbMysql.getRepository(RestaurantProfile);
 
-    public async getRestsByKeyword(keyword: string) {
-        const isCategory = await this.repoCategory.exist({ where: { name: keyword } });
-        if (isCategory) {
-            return await this.getRestsByCategory(keyword);
+    public async getRests(options: IRestaurantSearchOptions) {
+        if (options.keyword) {
+            return await this.getRestsByKeyword(options);
         }
         else {
-            return await this.getRestsByName(keyword);
+            return await this.getRestsByOptions(options, {});
         }
     }
 
-    public async getRestsByCategory(keyword: string) {
-        return await this.repoRest.find({
-            order: { id: "ASC" },
-            relations: { category: true },
-            where: { category: { name: keyword } }
-        });
+    public async getRestsByKeyword(options: IRestaurantSearchOptions) {
+        const isCategory = await this.repoCategory.exist({ where: { name: options.keyword } });
+        if (isCategory) {
+            return await this.getRestsByCategory(options);
+        }
+        else {
+            return await this.getRestsByName(options);
+        }
     }
 
-    public async getRestsByName(keyword: string) {
-        return await this.repoRest.find({
-            order: { id: "ASC" },
-            where: { name: Like(`%${keyword}%`) }
-        });
+    public async getRestsByCategory(options: IRestaurantSearchOptions) {
+        const optionsWhere: FindOptionsWhere<Restaurant> = {
+            category: { name: options.keyword }
+        }
+        return await this.getRestsByOptions(options, optionsWhere);
+    }
+
+    public async getRestsByName(options: IRestaurantSearchOptions) {
+        const optionsWhere: FindOptionsWhere<Restaurant> = {
+            name: Like(`%${options.keyword}%`)
+        }
+        return await this.getRestsByOptions(options, optionsWhere);
     }
 
     public async getRestById(id: number) {
@@ -46,25 +54,18 @@ export default class RestaurantService {
         });
     }
 
-    public async getRestaurants() {
-        return await this.repoRest.find({
-            order: { id: "ASC" },
-            relations: { category: true }
-        });
-    }
-
-    public async createRestaurant(data: IRestaurant) {
+    public async createRest(data: IRestaurant) {
         const rest = this.repoRest.create();
         const profile = this.repoProfile.create();
-        await this.saveRestaurant(data, rest, profile);
+        await this.saveRest(data, rest, profile);
     }
 
-    public async updateRestaurant(data: IRestaurant) {
+    public async updateRest(data: IRestaurant) {
         const rest = await this.getRestById(data.id) as Restaurant;
-        if (rest) await this.saveRestaurant(data, rest, rest.profile);
+        if (rest) await this.saveRest(data, rest, rest.profile);
     }
 
-    public async deleteRestaurant(id: number) {
+    public async deleteRest(id: number) {
         if (isNaN(id)) return;
 
         const rest = await this.getRestById(id) as Restaurant;
@@ -74,7 +75,7 @@ export default class RestaurantService {
         }
     }
 
-    private async saveRestaurant(data: IRestaurant, rest: Restaurant, profile: RestaurantProfile) {
+    private async saveRest(data: IRestaurant, rest: Restaurant, profile: RestaurantProfile) {
         const category = await this.repoCategory.findOne({
             where: { name: data.category }
         }) as Category;
@@ -93,5 +94,39 @@ export default class RestaurantService {
         profile.restaurant = rest;
 
         await this.repoProfile.save(profile);
+    }
+
+    private async getGroupCount(countPerGroup: number, optionsWhere: FindOptionsWhere<Restaurant>) {
+        const findOptions = { where: optionsWhere };
+        return Math.ceil(await this.repoRest.count(findOptions) / countPerGroup);
+    }
+
+    private async getRestsByOptions(options: IRestaurantSearchOptions, optionsWhere: FindOptionsWhere<Restaurant>) {
+        const findOptions: FindManyOptions<Restaurant> = {
+            order: this.getOptionsOrder(options.orderType),
+            relations: this.getOptionsRelation(options.orderType),
+            where: optionsWhere,
+            skip: options.offset,
+            take: options.limit
+        }
+        const groupCount = await this.getGroupCount(options.limit, optionsWhere);
+        const rests = await this.repoRest.find(findOptions);
+        return { rests, groupCount };
+    }
+
+    private getOptionsOrder(orderType: number): FindOptionsOrder<Restaurant> {
+        switch (orderType) {
+            case 2: return { name: "DESC" };
+            case 3: return { category: { name: "ASC" } };
+            case 4: return { profile: { location: "ASC" } };
+            default: return { name: "ASC" };
+        }
+    }
+
+    private getOptionsRelation(orderType: number): FindOptionsRelations<Restaurant> {
+        switch (orderType) {
+            case 4: return { category: true, profile: true };
+            default: return { category: true };
+        }
     }
 }

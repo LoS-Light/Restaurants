@@ -6,6 +6,8 @@ import Restaurant from '../../entities/restaurant.entity';
 import RestaurantProfile from '../../entities/restaurant-profile.entity';
 import { IRestaurant } from '../../interfaces/restaurant.interface';
 
+
+
 export default class Restaurants1691533956420 implements Seeder {
     track = false;
 
@@ -60,5 +62,11 @@ export default class Restaurants1691533956420 implements Seeder {
             });
             await repoProfile.save(newProfile);
         }
+    }
+
+    private async seedRandom() {
+
+
+
     }
 }

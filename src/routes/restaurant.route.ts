@@ -1,28 +1,40 @@
 import express from 'express';
 import RestaurantService from '../services/restaurant.service';
-import { IRestaurant } from '../interfaces/restaurant.interface';
+import { IRestaurant, IRestaurantSearchOptions } from '../interfaces/restaurant.interface';
 import asyncCatch from '../middlewares/asyncCatch.middleware';
 import { check } from 'express-validator';
 import { FLASH_ACTION_ERROR, FLASH_ACTION_INFO, FLASH_TEXT_CREATE_REST, FLASH_TEXT_DELETE_REST, FLASH_TEXT_EDIT_REST } from '../defs/flash.def';
+import { getHandlebarsPageItems } from '../handlebars/templates/common.hbt';
 
 export const RestaurantRoute = express.Router();
 const restService = new RestaurantService();
+const pageItemCount: number = 9;
 
 // Validation
 const validCheck = check('**').trim().blacklist('<>&=()\"\'');
 
 // View
-RestaurantRoute.get(['/', '/index', '/index.html'], (req, res) => res.redirect('/restaurants'));
+RestaurantRoute.get(['/', '/index', '/index.html'], (req, res) => res.redirect('/restaurants?page=1'));
 
 RestaurantRoute.get('/restaurants', validCheck, asyncCatch(async (req, res) => {
+    if (!req.query.page) return res.redirect('/index');
+
     const flashInfo = req.flash(FLASH_ACTION_INFO);
     const errorInfo = req.flash(FLASH_ACTION_ERROR);
 
-    const keyword = req.query.keyword as string;
-    const rests = await (keyword ?
-        restService.getRestsByKeyword(keyword) : restService.getRestaurants());
+    const pageNum = Number(req.query.page);
+    const orderType = req.query.order ? Number(req.query.order) : 1;
+    const options: IRestaurantSearchOptions = {
+        keyword: req.query.keyword as string,
+        offset: (pageNum - 1) * pageItemCount,
+        limit: pageItemCount,
+        orderType: orderType
+    }
 
-    res.render('index', { flashInfo, errorInfo, rests });
+    const { rests, groupCount } = (await restService.getRests(options));
+    const pageItems = getHandlebarsPageItems(pageNum, groupCount, "page", req);
+
+    res.render('index', { flashInfo, errorInfo, rests, pageItems, orderType });
 }));
 
 RestaurantRoute.get('/restaurants/new', validCheck, asyncCatch(async (req, res) => {
@@ -66,7 +78,7 @@ RestaurantRoute.get('/error', validCheck, asyncCatch(async (req, res) => {
 RestaurantRoute.post('/restaurants/new', validCheck, asyncCatch(async (req, res) => {
     const data = {} as IRestaurant;
     mapRestDataFromBody(data, req.body);
-    await restService.createRestaurant(data);
+    await restService.createRest(data);
 
     req.flash(FLASH_ACTION_INFO, FLASH_TEXT_CREATE_REST);
     res.redirect('/index');
@@ -75,7 +87,7 @@ RestaurantRoute.post('/restaurants/new', validCheck, asyncCatch(async (req, res)
 RestaurantRoute.put('/restaurants/:id', validCheck, asyncCatch(async (req, res) => {
     const data = { id: Number(req.params.id) } as IRestaurant;
     mapRestDataFromBody(data, req.body);
-    await restService.updateRestaurant(data);
+    await restService.updateRest(data);
 
     req.flash(FLASH_ACTION_INFO, FLASH_TEXT_EDIT_REST);
     res.redirect('/index');
@@ -83,7 +95,7 @@ RestaurantRoute.put('/restaurants/:id', validCheck, asyncCatch(async (req, res) 
 
 RestaurantRoute.delete('/restaurants/:id', validCheck, asyncCatch(async (req, res) => {
     const id = Number(req.params.id);
-    await restService.deleteRestaurant(id);
+    await restService.deleteRest(id);
 
     req.flash(FLASH_ACTION_INFO, FLASH_TEXT_DELETE_REST);
     res.redirect('/index');

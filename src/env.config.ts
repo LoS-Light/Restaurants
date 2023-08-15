@@ -26,5 +26,6 @@ export const DbMysqlConfig: DataSourceOptions & SeederOptions = {
 export const SessionConfig: SessionOptions = {
     secret: process.env.SESSION_SECRET as string,
     resave: JSON.parse(process.env.SESSION_RESAVE as string),
-    saveUninitialized: JSON.parse(process.env.SESSION_SAVE_UNINITIALIZED as string)
+    saveUninitialized: JSON.parse(process.env.SESSION_SAVE_UNINITIALIZED as string),
+    cookie: JSON.parse(process.env.SESSION_COOKIE as string)
 }

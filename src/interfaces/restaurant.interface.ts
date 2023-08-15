@@ -11,3 +11,10 @@ export interface IRestaurant {
     rating: number;
     description: string;
 }
+
+export interface IRestaurantSearchOptions {
+    keyword: string;
+    offset: number;
+    limit: number;
+    orderType: number;
+}
