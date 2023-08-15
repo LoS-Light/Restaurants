@@ -5,9 +5,10 @@ import { DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 
 // Configs
-export const Config: { readonly nodeEnv: string, readonly port: number } = {
+export const Config: { readonly nodeEnv: string, readonly port: number, readonly trustProxy: boolean } = {
     nodeEnv: process.env.NODE_ENV as string,
-    port: Number(process.env.PORT)
+    port: Number(process.env.PORT),
+    trustProxy: JSON.parse(process.env.TRUST_PROXY as string)
 }
 
 export const DbMysqlConfig: DataSourceOptions & SeederOptions = {

@@ -24,6 +24,7 @@ const main = async () => {
     app.use(express.urlencoded({ extended: true }));
     app.use(methodOverride('_method'));
 
+    app.set('trust proxy', Config.trustProxy) // trust first proxy
     app.use(session(SessionConfig));
     app.use(flash());
     app.use(MainRoute);
