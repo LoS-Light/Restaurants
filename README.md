@@ -4,8 +4,10 @@
 
 ## Features
 
--   Display all restaurants
+-   Display restaurants on multiple pages
 -   Search restaurants by name or category
+-   Order restaurants
+-   Flash messages
 -   Create a new restaurant
 -   Check restaurant information
 -   Edit restaurant information
@@ -42,15 +44,23 @@ npm install
 
 <br />
 
-4. Launch Mysql Server
+4. Create example environment configs
 
-Launch your mysql server, and edit environment config files in folder "env".<br />
-There are two config files in it, ".env.development.local" and ".env.production.local".<br />
-Change the "DB_MYSQL_USERNAME" and "DB_MYSQL_PASSWORD" to match your mysql server connection settings.
+```
+npm run env:create
+```
 
 <br />
 
-5. Create a new database and seed test data.
+5. Launch Mysql Server
+
+Launch your mysql server, and edit environment config files in folder "env".<br />
+There are two config files in it, ".env.development.local" and ".env.production.local".<br />
+Change the "DB_MYSQL_USERNAME", "DB_MYSQL_PASSWORD", "SESSION_SECRET" to match your mysql server connection settings.
+
+<br />
+
+6. Create a new database and seed test data.
 
 ```
 npm run db:create
@@ -59,7 +69,7 @@ npm run seed
 
 <br />
 
-6. Launch the application
+7. Launch the application
 
 Run app in development mode
 
