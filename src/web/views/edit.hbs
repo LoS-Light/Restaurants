@@ -20,11 +20,11 @@
         <div class="card-body fw-medium">
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Name:</div>
-                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-name" class="form-control" type="text" value="{{rest.name}}" required></div>
+                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-name" class="form-control" type="text" value="{{rest.name}}" maxlength="20" required></div>
             </div>
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">English Name:</div>
-                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-name-en" class="form-control" type="text" value="{{rest.nameEn}}" required></div>
+                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-name-en" class="form-control" type="text" value="{{rest.nameEn}}" maxlength="30" required></div>
             </div>
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Category:</div>
@@ -43,12 +43,12 @@
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Image Url:</div>
                 <div class="col-7 col-md-8 ps-2 pe-0">
-                    <input name="rest-image" class="form-control" type="url" placeholder="https://example.com" pattern="https://.*" value="{{rest.image}}">
+                    <input name="rest-image" class="form-control" type="url" placeholder="https://example.com" pattern="https://.*" value="{{rest.image}}" maxlength="2048">
                 </div>
             </div>
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Location:</div>
-                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-location" class="form-control" type="text" value="{{rest.profile.location}}" required></div>
+                <div class="col-7 col-md-8 ps-2 pe-0"><input name="rest-location" class="form-control" type="text" value="{{rest.profile.location}}" maxlength="32" required></div>
             </div>
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Phone:</div>
@@ -60,7 +60,7 @@
                 <div class="col-5 col-md-4 p-0 pt-2">Google Map Url:</div>
                 <div class="col-7 col-md-8 ps-2 pe-0">
                     <input id="rest-google-map" name="rest-google-map" class="form-control" type="url" placeholder="https://example.com" pattern="https://.*" value="{{rest.profile.googleMap}}"
-                        required>
+                        maxlength="2048" required>
                 </div>
             </div>
             <div class="row mx-sm-1 mb-4">
@@ -70,7 +70,7 @@
             <div class="row mx-sm-1 mb-4">
                 <div class="col-5 col-md-4 p-0 pt-2">Description:</div>
                 <div class="col-7 col-md-8 ps-2 pe-0">
-                    <textarea name="rest-description" class="form-control" rows="3">{{rest.profile.description}}</textarea>
+                    <textarea name="rest-description" class="form-control" rows="3" maxlength="2048">{{rest.profile.description}}</textarea>
                 </div>
             </div>
             <div class="row mx-sm-1 text-center">

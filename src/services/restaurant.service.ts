@@ -5,6 +5,7 @@ import Category from "../entities/category.entity";
 import { FindManyOptions, FindOptionsOrder, FindOptionsRelations, FindOptionsWhere, Like } from "typeorm";
 import { IRestaurant, IRestaurantSearchOptions } from "../interfaces/restaurant.interface";
 import RestaurantProfile from "../entities/restaurant-profile.entity";
+import { EOrderType } from "../enums/restaurant.enum";
 
 export default class RestaurantService {
 
@@ -114,18 +115,18 @@ export default class RestaurantService {
         return { rests, groupCount };
     }
 
-    private getOptionsOrder(orderType: number): FindOptionsOrder<Restaurant> {
+    private getOptionsOrder(orderType: EOrderType): FindOptionsOrder<Restaurant> {
         switch (orderType) {
-            case 2: return { name: "DESC" };
-            case 3: return { category: { name: "ASC" } };
-            case 4: return { profile: { location: "ASC" } };
+            case EOrderType.NameDESC: return { name: "DESC" };
+            case EOrderType.CategoryASC: return { category: { name: "ASC" } };
+            case EOrderType.ProfileASC: return { profile: { location: "ASC" } };
             default: return { name: "ASC" };
         }
     }
 
     private getOptionsRelation(orderType: number): FindOptionsRelations<Restaurant> {
         switch (orderType) {
-            case 4: return { category: true, profile: true };
+            case EOrderType.CategoryASC: return { category: true, profile: true };
             default: return { category: true };
         }
     }

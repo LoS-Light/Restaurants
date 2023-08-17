@@ -1,3 +1,4 @@
+import { EOrderType } from "../enums/restaurant.enum";
 
 export interface IRestaurant {
     id: number;
@@ -16,5 +17,5 @@ export interface IRestaurantSearchOptions {
     keyword: string;
     offset: number;
     limit: number;
-    orderType: number;
+    orderType: EOrderType;
 }
