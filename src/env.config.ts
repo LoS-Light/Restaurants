@@ -1,8 +1,12 @@
 import './utils/dot-env-loader';
-
 import { SessionOptions } from 'express-session';
 import { DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
+
+import session from 'express-session';
+import FS from 'session-file-store';
+
+const FileStore = FS(session);
 
 // Configs
 export const Config: { readonly nodeEnv: string, readonly port: number, readonly trustProxy: boolean } = {
@@ -25,6 +29,7 @@ export const DbMysqlConfig: DataSourceOptions & SeederOptions = {
 }
 
 export const SessionConfig: SessionOptions = {
+    store: new FileStore(),
     secret: process.env.SESSION_SECRET as string,
     resave: JSON.parse(process.env.SESSION_RESAVE as string),
     saveUninitialized: JSON.parse(process.env.SESSION_SAVE_UNINITIALIZED as string),

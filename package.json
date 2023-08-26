@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/app.js",
-    "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
+    "dev": "cross-env NODE_ENV=development nodemon --ignore ./sessions src/app.ts",
     "build": "tsc && cp -R ./src/web ./dist",
     "env:create": "cp -R ./env/examples/. ./env",
     "db:create": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:create -d src/database/data-source.mysql.ts",
@@ -30,6 +30,7 @@
     "express-validator": "^7.0.1",
     "method-override": "^3.0.0",
     "mysql2": "^3.6.0",
+    "session-file-store": "^1.5.0",
     "typeorm": "^0.3.17",
     "typeorm-extension": "^3.0.1"
   },
@@ -40,6 +41,7 @@
     "@types/express-session": "^1.17.7",
     "@types/method-override": "^0.0.32",
     "@types/node": "^20.4.8",
+    "@types/session-file-store": "^1.2.2",
     "cross-env": "^7.0.3",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",

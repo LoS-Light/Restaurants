@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import seedDataRests from '../seeds-data/restaurant.json';
+import seedDataRests from '../seeds/restaurant.json';
 import Category from '../../entities/category.entity';
 import Restaurant from '../../entities/restaurant.entity';
 import RestaurantProfile from '../../entities/restaurant-profile.entity';
