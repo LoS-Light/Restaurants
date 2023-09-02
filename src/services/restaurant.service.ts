@@ -126,7 +126,7 @@ export default class RestaurantService {
 
     private getOptionsRelation(orderType: number): FindOptionsRelations<Restaurant> {
         switch (orderType) {
-            case EOrderType.CategoryASC: return { category: true, profile: true };
+            case EOrderType.ProfileASC: return { category: true, profile: true };
             default: return { category: true };
         }
     }
